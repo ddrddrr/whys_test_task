@@ -1,16 +1,17 @@
 from django.db import models
 
 
+# null=True is not needed for char/text fields
 class AttributeName(models.Model):
-	nazev = models.CharField("Nazev", max_length=100, blank=True)
-	kod = models.CharField("Kod", max_length=100, blank=True)
-	zobrazit = models.BooleanField("Zobrazit", default=False, blank=True)
+	name = models.CharField(max_length=100, blank=True)
+	code = models.CharField(max_length=100, blank=True)
+	show = models.BooleanField(default=False, blank=True)
 
 
 class AttributeValue(models.Model):
-	hodnota = models.CharField("Hodnota", max_length=100)
+	value = models.CharField(max_length=100)
 
 
 class Attribute(models.Model):
-	nazev_atributu = models.ForeignKey(AttributeName, on_delete=models.CASCADE)
-	hodnota_atributu = models.ForeignKey(AttributeValue, on_delete=models.CASCADE)
+	attribute_name = models.ForeignKey(AttributeName, on_delete=models.CASCADE)
+	attribute_value = models.ForeignKey(AttributeValue, on_delete=models.CASCADE)

@@ -4,7 +4,6 @@ from products.models import Product, ProductAttributes, ProductImage, Catalog
 from .image_factory import ImageFactory
 from .attribute_factory import AttributeFactory
 import random as r
-from pytest_factoryboy import register
 
 
 class CurrencyProvider(Factory):
@@ -19,10 +18,10 @@ class ProductFactory(DjangoModelFactory):
 	class Meta:
 		model = Product
 
-	nazev = Faker('word')
+	name = Faker('word')
 	description = Faker('paragraph', nb_sentences=r.randint(1, 5))
-	cena = Faker('pydecimal', left_digits=r.randint(1, 10), right_digits=r.randint(0, 2))
-	mena = CurrencyProvider.random_currency()
+	price = Faker('pydecimal', left_digits=r.randint(1, 10), right_digits=r.randint(0, 2))
+	currency = CurrencyProvider.random_currency()
 	published_on = Faker('date_time_this_century')
 	is_published = Faker('pybool')
 
@@ -32,8 +31,8 @@ class ProductImageFactory(DjangoModelFactory):
 		model = ProductImage
 
 	product = SubFactory(ProductFactory)
-	obrazek = SubFactory(ImageFactory)
-	nazev = Faker('word')
+	image = SubFactory(ImageFactory)
+	name = Faker('word')
 
 
 class ProductAttributesFactory(DjangoModelFactory):
@@ -48,17 +47,17 @@ class CatalogFactory(DjangoModelFactory):
 	class Meta:
 		model = Catalog
 
-	nazev = Faker('word')
-	obrazek = SubFactory(ImageFactory)
+	name = Faker('word')
+	image = SubFactory(ImageFactory)
 
 	@post_generation
-	def products_ids(self, create, extracted, **kwargs):
+	def products(self, create, extracted, **kwargs):
 		if not create or not extracted:
 			return
-		self.products_ids.add(*extracted)
+		self.products.add(*extracted)
 
 	@post_generation
-	def attributes_ids(self, create, extracted, **kwargs):
+	def attributes(self, create, extracted, **kwargs):
 		if not create or not extracted:
 			return
-		self.attributes_ids.add(*extracted)
+		self.attributes.add(*extracted)

@@ -5,14 +5,12 @@ pytestmark = pytest.mark.django_db
 
 
 class TestSerializeAttributeModels:
-	def test_serialize_image(self, image_factory):
-		image = image_factory()
+	def test_serialize_image(self, image):
 		serializer = ImageSerializer(image)
-		assert serializer.data['obrazek'] == image.obrazek
-		assert serializer.data['nazev'] == image.nazev
+		assert serializer.data['obrazek'] == image.source_url
+		assert serializer.data['nazev'] == image.name
 
-	def test_deserialize_image(self, image_factory):
-		image = image_factory()
+	def test_deserialize_image(self, image):
 		serializer = ImageSerializer(image)
 		assert serializer.data
 		serializer = ImageSerializer(data=serializer.data)

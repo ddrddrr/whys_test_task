@@ -9,6 +9,10 @@ from api.serializer_mixins import SerializerUrlMixin
 
 # Explicitly providing fields is more readable than __all__
 class ProductSerializer(SerializerUrlMixin, serializers.ModelSerializer):
+	nazev = serializers.CharField(source='name', required=False)
+	cena = serializers.DecimalField(source='price', max_digits=12, decimal_places=2)
+	mena = serializers.CharField(source='currency')
+
 	class Meta:
 		model = Product
 		fields = [
@@ -39,7 +43,8 @@ class ProductAttributesSerializer(SerializerUrlMixin, serializers.ModelSerialize
 
 class ProductImageSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 	product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
-	obrazek_id = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all(), source='obrazek')
+	obrazek_id = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all(), source='image')
+	nazev = serializers.CharField(source='name', required=False)
 
 	class Meta:
 		model = ProductImage
@@ -52,31 +57,25 @@ class ProductImageSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 		]
 
 
-# class DetailedProductSerializer(ProductSerializer):
-# 	attributes = serializers.PrimaryKeyRelatedField(many=True, queryset=Attribute.objects.all())
-# 	image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
-#
-# 	class Meta:
-# 		model = Product
-# 		fields = ProductSerializer.Meta.fields + ['attributes', 'image']
-
-
 class CatalogSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 	obrazek_id = serializers.PrimaryKeyRelatedField(
 			queryset=Image.objects.all(),
 			required=False,
-			source='obrazek'
+			source='image'
 	)
 	products_ids = serializers.PrimaryKeyRelatedField(
 			many=True,
 			required=False,
-			queryset=Product.objects.all()
+			queryset=Product.objects.all(),
+			source='products'
 	)
 	attributes_ids = serializers.PrimaryKeyRelatedField(
 			many=True,
 			required=False,
-			queryset=Attribute.objects.all()
+			queryset=Attribute.objects.all(),
+			source='attributes'
 	)
+	nazev = serializers.CharField(source='name', required=False)
 
 	class Meta:
 		model = Catalog
@@ -88,6 +87,14 @@ class CatalogSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 			'products_ids',
 			'attributes_ids',
 		]
+
+# class DetailedProductSerializer(ProductSerializer):
+# 	attributes = serializers.PrimaryKeyRelatedField(many=True, queryset=Attribute.objects.all())
+# 	image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
+#
+# 	class Meta:
+# 		model = Product
+# 		fields = ProductSerializer.Meta.fields + ['attributes', 'image']
 
 
 # class DetailedCatalogSerializer(CatalogSerializer):

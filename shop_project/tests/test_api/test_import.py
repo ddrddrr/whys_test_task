@@ -1,6 +1,7 @@
 import pytest
 from ..misc import IMPORT_ENDPOINT, TEST_DATA
 import json
+
 from attributes.serializers import (
 	AttributeNameSerializer,
 	AttributeValueSerializer,

@@ -4,6 +4,10 @@ from api.serializer_mixins import SerializerUrlMixin
 
 
 class AttributeNameSerializer(SerializerUrlMixin, serializers.ModelSerializer):
+	nazev = serializers.CharField(source='name')
+	kod = serializers.CharField(source='code', required=False)
+	zobrazit = serializers.BooleanField(source='show', required=False)
+
 	class Meta:
 		model = AttributeName
 		fields = [
@@ -15,6 +19,8 @@ class AttributeNameSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 
 
 class AttributeValueSerializer(SerializerUrlMixin, serializers.ModelSerializer):
+	hodnota = serializers.CharField(source='value')
+
 	class Meta:
 		model = AttributeValue
 		fields = [
@@ -27,11 +33,11 @@ class AttributeValueSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 class AttributeSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 	nazev_atributu_id = serializers.PrimaryKeyRelatedField(
 			queryset=AttributeName.objects.all(),
-			source='nazev_atributu'
+			source='attribute_name'
 	)
 	hodnota_atributu_id = serializers.PrimaryKeyRelatedField(
 			queryset=AttributeValue.objects.all(),
-			source='hodnota_atributu'
+			source='attribute_value'
 	)
 
 	class Meta:
@@ -45,8 +51,8 @@ class AttributeSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 
 
 class DetailedAttributeSerializer(AttributeSerializer):
-	attribute_name = AttributeNameSerializer(read_only=True, source='nazev_atributu')
-	attribute_value = AttributeValueSerializer(read_only=True, source='hodnota_atributu')
+	attribute_name = AttributeNameSerializer(read_only=True, source='attribute_name')
+	attribute_value = AttributeValueSerializer(read_only=True, source='attribute_value')
 
 	class Meta:
 		model = Attribute
