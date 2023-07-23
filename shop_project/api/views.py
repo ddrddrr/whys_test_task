@@ -13,7 +13,7 @@ class ModelRetrieveView(RegularModelInfoMixin, generics.RetrieveAPIView):
 	pass
 
 
-class DetailedModelRetrieveView(DetailedModelInfoMixin, generics.ListAPIView):
+class DetailedModelRetrieveView(DetailedModelInfoMixin, generics.RetrieveAPIView):
 	pass
 
 

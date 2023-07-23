@@ -51,8 +51,8 @@ class AttributeSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 
 
 class DetailedAttributeSerializer(AttributeSerializer):
-	attribute_name = AttributeNameSerializer(read_only=True, source='attribute_name')
-	attribute_value = AttributeValueSerializer(read_only=True, source='attribute_value')
+	attribute_name = AttributeNameSerializer(read_only=True)
+	attribute_value = AttributeValueSerializer(read_only=True)
 
 	class Meta:
 		model = Attribute
