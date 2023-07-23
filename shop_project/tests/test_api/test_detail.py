@@ -1,5 +1,5 @@
 import pytest
-from api.utils import MODEL_TO_SERIALIZERS_MAP as mts_map, change_attribute_names
+from api.utils import MODEL_TO_SERIALIZERS_MAP as mts_map
 from ..misc import TEST_DATA, get_detail_endpoint, get_model_name
 import json
 from attributes.serializers import (
@@ -39,8 +39,6 @@ def create_model(payload):
 	print(payload)
 	model_name = get_model_name(payload)
 	_, serializers = mts_map.model_serializer_mapping[model_name.lower()]
-	field_mapping = mts_map.get_field_map(model_name.lower())
-	attrs = change_attribute_names(payload[model_name], field_mapping)
 	serializer = serializers['regular']
 	serializer = serializer(data=payload[model_name])
 	try:

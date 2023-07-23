@@ -3,7 +3,7 @@ import os
 import json
 
 IMPORT_ENDPOINT = '/import/'
-TEST_DATA = os.path.join("..", 'test_data.json')
+TEST_DATA = os.path.join('..', 'TASK', 'test_data.json')
 
 FACTORIES = {
 	af.AttributeNameFactory,

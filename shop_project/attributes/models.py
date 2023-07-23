@@ -1,5 +1,5 @@
 from django.db import models
-
+### I could not sit and look at the combination of czech and english variable names :)
 
 # null=True is not needed for char/text fields
 class AttributeName(models.Model):
