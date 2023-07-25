@@ -3,6 +3,7 @@ from factory.django import DjangoModelFactory
 from products.models import Product, ProductAttributes, ProductImage, Catalog
 from .image_factory import ImageFactory
 from .attribute_factory import AttributeFactory
+from .base_factory import UserIdFactory
 import random as r
 
 
@@ -14,7 +15,7 @@ class CurrencyProvider(Factory):
 		return r.choice(cls.CURRENCIES)
 
 
-class ProductFactory(DjangoModelFactory):
+class ProductFactory(UserIdFactory):
 	class Meta:
 		model = Product
 
@@ -26,7 +27,7 @@ class ProductFactory(DjangoModelFactory):
 	is_published = Faker('pybool')
 
 
-class ProductImageFactory(DjangoModelFactory):
+class ProductImageFactory(UserIdFactory):
 	class Meta:
 		model = ProductImage
 
@@ -35,7 +36,7 @@ class ProductImageFactory(DjangoModelFactory):
 	name = Faker('word')
 
 
-class ProductAttributesFactory(DjangoModelFactory):
+class ProductAttributesFactory(UserIdFactory):
 	class Meta:
 		model = ProductAttributes
 
@@ -43,7 +44,7 @@ class ProductAttributesFactory(DjangoModelFactory):
 	product = SubFactory(ProductFactory)
 
 
-class CatalogFactory(DjangoModelFactory):
+class CatalogFactory(UserIdFactory):
 	class Meta:
 		model = Catalog
 

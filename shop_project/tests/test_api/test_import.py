@@ -24,14 +24,23 @@ def is_created(client, model_name, data):
 
 
 class TestImport:
-	def test_import_task_data_json(self, client):
+	def test_import_one_at_a_time_task_data_json(self, client):
 		with open(TEST_DATA, mode='r', encoding='utf-8') as td:
 			test_data = json.load(td)
 			for payload in test_data:
 				response = client.post(IMPORT_ENDPOINT, data=payload, format='json')
+				print(payload)
 				if response.status_code != 201:
-					print(payload, "--------------------------", response.json())
+					print(response.json())
 				assert response.status_code == 201
+
+	def test_import_all_task_data_json(self, client):
+		with open(TEST_DATA, mode='r', encoding='utf-8') as td:
+			test_data = json.load(td)
+			response = client.post(IMPORT_ENDPOINT, data=test_data, format='json')
+			if response.status_code != 201:
+				print(response.json())
+			assert response.status_code == 201
 
 	def test_import_attribute_name(self, client, attribute_name):
 		serializer = AttributeNameSerializer(attribute_name)

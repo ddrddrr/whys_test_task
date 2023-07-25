@@ -4,8 +4,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
 
-# TODO custom errors (with 404 and others)
-def get_model_name(request, kwargs) -> str:
+def get_serializer_class(model_name):
+	_, serializer_classes = mts_map.get_model_and_serializers(model_name)
+	if serializer_classes is not None:
+		# mapping contains only instances of regular and/or detailed serializers
+		return serializer_classes['regular']
+	return None
+
+
+def get_model_name(request, kwargs=None) -> str:
 	if request.method == 'GET':
 		model_name = kwargs.get('model_name', '')
 		if not model_name:
@@ -38,7 +45,7 @@ class FindModelMixin:
 		model, _ = mts_map.get_model_and_serializers(model_name)
 		if model is not None and model.objects.exists():
 			try:
-				obj = model.objects.get(pk=self.kwargs['pk'])
+				obj = model.objects.get(id=self.kwargs['pk'])
 			except ObjectDoesNotExist:
 				raise Http404
 			return obj
@@ -92,7 +99,7 @@ class GetRegularSerializerMixin:
 
 	def get_serializer(self, *args, **kwargs):
 		if self.request.method == 'POST':
-			model_name = get_model_name(self.request, self.kwargs)
+			model_name = get_model_name(self.request)
 			kwargs['data'] = self.request.data[model_name]
 		return super().get_serializer(*args, **kwargs)
 

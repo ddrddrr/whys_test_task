@@ -1,11 +1,15 @@
 from rest_framework import serializers
-from api.serializer_mixins import SerializerUrlMixin
+from api.serializers import UrlIdSerializer
 from .models import Image
 
 
-class ImageSerializer(SerializerUrlMixin, serializers.ModelSerializer):
+class ImageSerializer(UrlIdSerializer):
 	obrazek = serializers.URLField(source='source_url')
-	nazev = serializers.CharField(source='name', required=False)
+	nazev = serializers.CharField(
+			source='name',
+			required=False,
+			allow_blank=True
+	)
 
 	class Meta:
 		model = Image

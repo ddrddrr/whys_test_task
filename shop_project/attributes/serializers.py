@@ -1,11 +1,19 @@
 from rest_framework import serializers
 from .models import Attribute, AttributeName, AttributeValue
-from api.serializer_mixins import SerializerUrlMixin
+from api.serializers import UrlIdSerializer
 
 
-class AttributeNameSerializer(SerializerUrlMixin, serializers.ModelSerializer):
-	nazev = serializers.CharField(source='name')
-	kod = serializers.CharField(source='code', required=False)
+class AttributeNameSerializer(UrlIdSerializer):
+	nazev = serializers.CharField(
+			source='name',
+			required=False,
+			allow_blank=True
+	)
+	kod = serializers.CharField(
+			source='code',
+			required=False,
+			allow_blank=True
+	)
 	zobrazit = serializers.BooleanField(source='show', required=False)
 
 	class Meta:
@@ -18,7 +26,7 @@ class AttributeNameSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 		]
 
 
-class AttributeValueSerializer(SerializerUrlMixin, serializers.ModelSerializer):
+class AttributeValueSerializer(UrlIdSerializer):
 	hodnota = serializers.CharField(source='value')
 
 	class Meta:
@@ -30,7 +38,7 @@ class AttributeValueSerializer(SerializerUrlMixin, serializers.ModelSerializer):
 		]
 
 
-class AttributeSerializer(SerializerUrlMixin, serializers.ModelSerializer):
+class AttributeSerializer(UrlIdSerializer):
 	nazev_atributu_id = serializers.PrimaryKeyRelatedField(
 			queryset=AttributeName.objects.all(),
 			source='attribute_name'

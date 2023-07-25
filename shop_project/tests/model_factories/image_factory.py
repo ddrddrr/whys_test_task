@@ -1,9 +1,10 @@
 from factory import Faker
 from factory.django import DjangoModelFactory
 from images.models import Image
+from .base_factory import UserIdFactory
 
 
-class ImageFactory(DjangoModelFactory):
+class ImageFactory(UserIdFactory):
 	class Meta:
 		model = Image
 

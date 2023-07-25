@@ -43,16 +43,17 @@ There are three main endpoints to use:
 		  "is_published": false
 	  }
   }
+  
+  You can also send a list of such data in order to bulk-create the models.
   Data should be in JSON format.
-  This will create the model, if the data is valid.
-  Sample response(JSON) if created:
-    {
-        'id': 25,
-        'url': None,
-        'obrazek': 'https://brown.com/', 
-        'nazev': 'he'
-    }
+  This will create the model(s), if the data is valid or return a JSON response describing the error
 
+  Sample response(JSON), if created:
+    {
+        'status': 'created',
+        'created_objects': {'Product': 4}
+    }
+    Where 4 is the id of the created model instance
 
 2. /<model_name>/
     Send a GET request with model name in order to retrieve a list of all
@@ -81,28 +82,42 @@ There are three main endpoints to use:
 
 ## Management commands
 
+All command should be executed as py manage.py create_model <args>
+
+```
+Leaving the <args> arg will create all possible model instances. 
+```
+
+
+
+```
 create_attributes
-
-```
-  Creates AttributeName, AttributeValue and Attribute objects with 
-  random values. You can provide names explicitly to create only desired models.
-  e.g. py manage.py create_attributes AttributeValue
-  Model names are case-insensetive
+Will create all attribute-related model instances:
+AttributeName, AttributeValue, Attribute
 ```
 
-create_images
 
 ```
-  Same as create_attributes, but supports only Image model.
-```
-
 create_products
+Same as create_attributes, but supports
+Product, ProductAttributes, ProductImage and Catalog models.
+```
 
 ```
-  Same as create_attributes, but supports Product, ProductAttributes, ProductImage and Catalog models.
+create_images
+Same as create_attributes, but supports
+Image model.
 ```
 
+```
+You can also provide model names directly
+e.g. py manage.py create_models AttributeName
+```
 
+```
+All arguments can be combined in any order.
+e.g. py manage.py create_models create_images Product create_attributes
+```
 ## Running Tests
 
 To run tests, run the following command in root 

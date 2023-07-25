@@ -1,6 +1,7 @@
 from django.db import models
+from api.models import UserDefinedIdModel
 
 
 class Image(models.Model):
-	source_url = models.URLField(default='')
+	source_url = models.URLField()
 	name = models.CharField(max_length=100, blank=True)

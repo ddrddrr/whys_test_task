@@ -1,9 +1,9 @@
 from factory import Faker, SubFactory
-from factory.django import DjangoModelFactory
 from attributes.models import AttributeName, AttributeValue, Attribute
+from .base_factory import UserIdFactory
 
 
-class AttributeNameFactory(DjangoModelFactory):
+class AttributeNameFactory(UserIdFactory):
 	class Meta:
 		model = AttributeName
 
@@ -12,14 +12,14 @@ class AttributeNameFactory(DjangoModelFactory):
 	show = Faker('pybool')
 
 
-class AttributeValueFactory(DjangoModelFactory):
+class AttributeValueFactory(UserIdFactory):
 	class Meta:
 		model = AttributeValue
 
 	value = Faker('word')
 
 
-class AttributeFactory(DjangoModelFactory):
+class AttributeFactory(UserIdFactory):
 	class Meta:
 		model = Attribute
 

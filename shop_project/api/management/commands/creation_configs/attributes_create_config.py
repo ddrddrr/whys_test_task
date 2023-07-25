@@ -1,20 +1,22 @@
-from django.core.management.base import BaseCommand
-from ._private import get_model_name, create, ModelCreateMixin, faker
+from .._private import get_model_name, create, faker
 
 payload_attr_name = {
 	"AttributeName": {
+		"id": faker.pyint(min_value=1, max_value=10000),
 		"nazev": faker.word()
 	}
 }
 
 payload_attr_val = {
 	"AttributeValue": {
+		"id": faker.pyint(min_value=1, max_value=10000),
 		"hodnota": faker.word()
 	}
 }
 
 payload_attr = {
 	"Attribute": {
+		"id": faker.pyint(min_value=1, max_value=10000),
 	}
 }
 
@@ -39,16 +41,3 @@ mf_map = {
 	'attributevalue': create_attribute_value,
 	'attribute': create_attribute
 }
-
-
-class Command(BaseCommand, ModelCreateMixin):
-	def add_arguments(self, parser):
-		parser.add_argument('create_attributes', nargs='*', type=str)
-
-	def handle(self, *args, **options):
-		if not options['create_attributes']:
-			for model_name in mf_map.keys():
-				self.create_model(model_name, mf_map)
-
-		for model_name in options['create_attributes']:
-			self.create_model(model_name, mf_map)

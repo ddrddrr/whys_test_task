@@ -3,7 +3,7 @@ from typing import Dict
 import importlib
 
 
-# assuming model names are unique
+# Assuming model names are unique
 class ModelToSerializersMapping:
 	"""
 		Utility class with {model_name : (model , [serializer])} mappings.
@@ -13,7 +13,7 @@ class ModelToSerializersMapping:
 
 	def __init__(self):
 		self.model_serializer_mapping = dict()
-		#self.model_field_names_mapping = dict()
+		# self.model_field_names_mapping = dict()
 		for config in apps.get_app_configs():
 			root_module_name = config.name
 			for model in config.get_models():
@@ -52,7 +52,6 @@ class ModelToSerializersMapping:
 
 
 MODEL_TO_SERIALIZERS_MAP = ModelToSerializersMapping()
-
 
 # def change_attribute_names(attributes: Dict[str, str], field_mapping: Dict[str, str]):
 # 	new_attrs = dict()

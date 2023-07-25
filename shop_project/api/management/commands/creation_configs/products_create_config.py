@@ -1,11 +1,11 @@
-from django.core.management.base import BaseCommand, CommandError
 from random import randint
-from ._private import get_model_name, create, ModelCreateMixin, faker
-from .create_attributes import create_attribute
-from .create_images import create_image
+from .._private import get_model_name, create, faker
+from .attributes_create_config import create_attribute
+from .images_create_config import create_image
 
 payload_product = {
 	"Product": {
+		"id": faker.pyint(min_value=1, max_value=10000),
 		"nazev": faker.word(),
 		"description": faker.text(max_nb_chars=100),
 		"cena": faker.pyint(min_value=1, max_value=10000),
@@ -17,17 +17,20 @@ payload_product = {
 
 payload_product_attrs = {
 	"ProductAttributes": {
+		"id": faker.pyint(min_value=1, max_value=10000)
 	}
 }
 
 payload_product_image = {
 	"ProductImage": {
+		"id": faker.pyint(min_value=1, max_value=10000),
 		"nazev": faker.word()
 	}
 }
 
 payload_catalog = {
 	"Catalog": {
+		"id": faker.pyint(min_value=1, max_value=10000),
 		"nazev": faker.word()
 	}
 }
@@ -65,16 +68,3 @@ mf_map = {
 	'productimage': create_product_image,
 	'catalog': create_catalog,
 }
-
-
-class Command(BaseCommand, ModelCreateMixin):
-	def add_arguments(self, parser):
-		parser.add_argument('create_products', nargs='*', type=str)
-
-	def handle(self, *args, **options):
-		if not options['create_products']:
-			for model_name in mf_map.keys():
-				self.create_model(model_name, mf_map)
-
-		for model_name in options['create_products']:
-			self.create_model(model_name, mf_map)

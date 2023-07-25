@@ -36,7 +36,6 @@ def are_equal(client, model_name, data):
 
 
 def create_model(payload):
-	print(payload)
 	model_name = get_model_name(payload)
 	_, serializers = mts_map.model_serializer_mapping[model_name.lower()]
 	serializer = serializers['regular']

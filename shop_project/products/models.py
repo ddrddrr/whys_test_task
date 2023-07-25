@@ -12,7 +12,7 @@ class Product(models.Model):
 	]
 	name = models.CharField(max_length=200, blank=True)
 	description = models.CharField(max_length=2000, blank=True)
-	price = models.DecimalField(default=0, max_digits=12, decimal_places=2)
+	price = models.DecimalField(default=0, max_digits=12, decimal_places=2, blank=True)
 	currency = models.CharField(max_length=3, choices=CURRENCIES, blank=True)
 	published_on = models.DateTimeField(null=True, blank=True)
 	is_published = models.BooleanField(default=False, blank=True)
@@ -28,6 +28,9 @@ class ProductAttributes(models.Model):
 			on_delete=models.CASCADE,
 			related_name='attributes'
 	)
+
+	class Meta:
+		verbose_name_plural = "product attributes"
 
 
 class ProductImage(models.Model):

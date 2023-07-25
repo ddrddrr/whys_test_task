@@ -9,6 +9,7 @@ class TestSerializeAttributeModels:
 		serializer = ImageSerializer(image)
 		assert serializer.data['obrazek'] == image.source_url
 		assert serializer.data['nazev'] == image.name
+		assert serializer.data['id']
 
 	def test_deserialize_image(self, image):
 		serializer = ImageSerializer(image)
