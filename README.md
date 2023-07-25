@@ -14,6 +14,10 @@ Docker is needed for the installation
     https://github.com/ddrddrr/whys_test_task.git
 2. Run this command in root project directory
     docker compose up
+3. In order to gain access to management commands run new container like this
+docker run -it <image_name> bash
+Or an existing container like this
+docker exec -it <name> bash
 ```
     
 ## Usage
@@ -82,7 +86,7 @@ There are three main endpoints to use:
 
 ## Management commands
 
-All command should be executed as py manage.py create_model <args>
+All command should be executed as "python manage.py create_model <args>"
 
 ```
 Leaving the <args> arg will create all possible model instances. 
@@ -111,12 +115,12 @@ Image model.
 
 ```
 You can also provide model names directly
-e.g. py manage.py create_models AttributeName
+e.g. python manage.py create_models AttributeName
 ```
 
 ```
 All arguments can be combined in any order.
-e.g. py manage.py create_models create_images Product create_attributes
+e.g. python manage.py create_models create_images Product create_attributes
 ```
 ## Running Tests
 
