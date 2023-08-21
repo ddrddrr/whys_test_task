@@ -1,7 +1,8 @@
 import pytest
-from api.utils import MODEL_TO_SERIALIZERS_MAP as mts_map
-from ..misc import TEST_DATA, get_detail_endpoint, get_model_name
 import json
+
+from api.utils import ModelToSerializersMapping
+
 from attributes.serializers import (
 	AttributeNameSerializer,
 	AttributeValueSerializer,
@@ -15,6 +16,9 @@ from products.serializers import (
 )
 from images.serializers import ImageSerializer
 
+from ..misc import TEST_DATA, get_detail_endpoint, get_model_name
+
+MTS_MAP = ModelToSerializersMapping()
 pytestmark = pytest.mark.django_db
 
 
@@ -37,7 +41,7 @@ def are_equal(client, model_name, data):
 
 def create_model(payload):
 	model_name = get_model_name(payload)
-	_, serializers = mts_map.model_serializer_mapping[model_name.lower()]
+	_, serializers = MTS_MAP.model_serializer_mapping[model_name.lower()]
 	serializer = serializers['regular']
 	serializer = serializer(data=payload[model_name])
 	try:

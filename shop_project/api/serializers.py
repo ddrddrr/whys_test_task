@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class UrlIdSerializer(serializers.ModelSerializer):
@@ -8,6 +9,9 @@ class UrlIdSerializer(serializers.ModelSerializer):
 		URL is the link to the page with information about specific model.
 		ID is the user_defined_id instead of built-in one.
 	"""
+
+	class Meta:
+		abstract = True
 
 	id = serializers.IntegerField(read_only=False)
 	url = serializers.SerializerMethodField(read_only=True, required=False)
@@ -19,7 +23,7 @@ class UrlIdSerializer(serializers.ModelSerializer):
 			try:
 				model_name = obj.__class__.__name__
 			except Exception as _:
-				return ''
+				return None
 			return reverse(
 					'model-retrieve',
 					kwargs={'model_name': model_name, 'pk': obj.pk},
@@ -31,20 +35,8 @@ class UrlIdSerializer(serializers.ModelSerializer):
 		model = self.Meta.model
 		try:
 			instance = model.objects.get(id=provided_id)
-		except Exception as _:
+		except ObjectDoesNotExist as _:
 			created = super().create(self.validated_data)
 			return created
-		return super().update(instance=instance, validated_data=self.validated_data)
 
-# class UserDefinedIdRelatedField(serializers.RelatedField):
-# 	def to_internal_value(self, user_defined_id):
-# 		# Look up the related model instance using user_defined_id instead of the default 'id'
-# 		queryset = self.get_queryset()
-# 		print(user_defined_id)
-# 		try:
-# 			return queryset.get(user_defined_id=user_defined_id)
-# 		except Exception as _:
-# 			raise serializers.ValidationError("Related object with user_defined_id not found.")
-#
-# 	def to_representation(self, instance):
-# 		return instance.user_defined_id
+		return super().update(instance=instance, validated_data=self.validated_data)

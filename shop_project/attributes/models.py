@@ -1,5 +1,4 @@
 from django.db import models
-from api.models import UserDefinedIdModel
 
 
 ### I could not sit and look at the combination of czech and english variable names :)

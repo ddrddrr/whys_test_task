@@ -5,11 +5,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY ../work_please/requirements.txt .
+COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY ../work_please/shop_project .
-EXPOSE 8000
+COPY shop_project .
 WORKDIR /app
 
 RUN chmod +x entrypoint.sh

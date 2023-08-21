@@ -1,11 +1,15 @@
-from .utils import MODEL_TO_SERIALIZERS_MAP as mts_map
 from rest_framework.exceptions import MethodNotAllowed, ParseError, ValidationError
-from django.core.exceptions import ObjectDoesNotExist
+
 from django.http import Http404
+from django.shortcuts import get_object_or_404
+
+from .utils import ModelToSerializersMapping
+
+MTS_MAP = ModelToSerializersMapping()
 
 
 def get_serializer_class(model_name):
-	_, serializer_classes = mts_map.get_model_and_serializers(model_name)
+	_, serializer_classes = MTS_MAP.get_model_and_serializers(model_name)
 	if serializer_classes is not None:
 		# mapping contains only instances of regular and/or detailed serializers
 		return serializer_classes['regular']
@@ -42,18 +46,15 @@ class FindModelMixin:
 
 	def get_object(self):
 		model_name = get_model_name(self.request, self.kwargs)
-		model, _ = mts_map.get_model_and_serializers(model_name)
+		model, _ = MTS_MAP.get_model_and_serializers(model_name)
 		if model is not None and model.objects.exists():
-			try:
-				obj = model.objects.get(id=self.kwargs['pk'])
-			except ObjectDoesNotExist:
-				raise Http404
+			obj = get_object_or_404(model, pk=self.kwargs['pk'])
 			return obj
 		raise Http404
 
 	def get_queryset(self):
 		model_name = get_model_name(self.request, self.kwargs)
-		model, _ = mts_map.get_model_and_serializers(model_name)
+		model, _ = MTS_MAP.get_model_and_serializers(model_name)
 		if model is not None and model.objects.exists():
 			return model.objects.all()
 		raise Http404
@@ -67,7 +68,7 @@ class GetRegularSerializerClassMixin:
 
 	def get_serializer_class(self):
 		model_name = get_model_name(self.request, self.kwargs)
-		_, serializer_classes = mts_map.get_model_and_serializers(model_name)
+		_, serializer_classes = MTS_MAP.get_model_and_serializers(model_name)
 		if serializer_classes is not None:
 			# mapping contains only instances of regular and/or detailed serializers
 			return serializer_classes['regular']
@@ -82,7 +83,7 @@ class GetDetailedSerializerClassMixin:
 
 	def get_serializer_class(self):
 		model_name = get_model_name(self.request, self.kwargs)
-		_, serializer_classes = mts_map.get_model_and_serializers(model_name)
+		_, serializer_classes = MTS_MAP.get_model_and_serializers(model_name)
 		if serializer_classes is not None:
 			sz = serializer_classes.get('detailed', '')
 			if sz == '':
@@ -118,11 +119,3 @@ class RegularModelInfoMixin(RegularSerialierMixin, FindModelMixin):
 
 class DetailedModelInfoMixin(DetaliedSerialierClassMixin, FindModelMixin):
 	pass
-
-# def get_serializer_context(self):
-# 	context = super().get_serializer_context()
-# 	if self.request.method == 'POST':
-# 		data = self.request.data
-# 		model_name = list(data.keys())[0]
-# 		context['custom_id'] = self.request.data[model_name]['id']
-# 	return context

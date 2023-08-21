@@ -1,5 +1,7 @@
 from factory import Faker, SubFactory
+
 from attributes.models import AttributeName, AttributeValue, Attribute
+
 from .base_factory import UserIdFactory
 
 

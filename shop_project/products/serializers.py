@@ -1,10 +1,14 @@
 from rest_framework import serializers
-from attributes.serializers import AttributeSerializer, DetailedAttributeSerializer
+
+from api.serializers import UrlIdSerializer
+
+from attributes.serializers import DetailedAttributeSerializer
 from attributes.models import Attribute
+
 from images.models import Image
 from images.serializers import ImageSerializer
+
 from .models import Product, ProductImage, ProductAttributes, Catalog
-from api.serializers import UrlIdSerializer
 
 
 # Explicitly providing fields is more readable than __all__
@@ -16,14 +20,15 @@ class ProductSerializer(UrlIdSerializer):
 	)
 	cena = serializers.DecimalField(
 			source='price',
-			max_digits=12,
+			required=False,
+			max_digits=10,
 			decimal_places=2,
-			required=False
 	)
 	mena = serializers.CharField(
 			source='currency',
 			required=False,
-			allow_blank=True)
+			allow_blank=True
+	)
 
 	class Meta:
 		model = Product
@@ -75,26 +80,28 @@ class ProductImageSerializer(UrlIdSerializer):
 
 class CatalogSerializer(UrlIdSerializer):
 	obrazek_id = serializers.PrimaryKeyRelatedField(
-			queryset=Image.objects.all(),
 			required=False,
-			source='image'
+			source='image',
+			queryset=Image.objects.all(),
 	)
 	products_ids = serializers.PrimaryKeyRelatedField(
 			many=True,
 			required=False,
+			source='products',
 			queryset=Product.objects.all(),
-			source='products'
 	)
 	attributes_ids = serializers.PrimaryKeyRelatedField(
 			many=True,
 			required=False,
+			source='attributes',
 			queryset=Attribute.objects.all(),
-			source='attributes'
 	)
 	nazev = serializers.CharField(
-			source='name',
 			required=False,
-			allow_blank=True)
+			allow_blank=True,
+			source='name',
+
+	)
 
 	class Meta:
 		model = Catalog
@@ -107,32 +114,14 @@ class CatalogSerializer(UrlIdSerializer):
 			'attributes_ids',
 		]
 
-	def create(self, validated_data):
-		catalog = Catalog(id=validated_data['id'])
-		catalog.save()
-		name = validated_data.get('nazev', '')
-		image = validated_data.get('obrazek_id', '')
-		products = validated_data.get('products_ids', '')
-		attributes = validated_data.get('attributes_ids', '')
-		if products:
-			catalog.products.set(products)
-		if attributes:
-			catalog.attributes.set(attributes)
-		if name:
-			catalog.name = name
-		if image:
-			catalog.image = image
 
-		catalog.save()
-		return catalog
 # class DetailedProductSerializer(ProductSerializer):
-# 	attributes = serializers.PrimaryKeyRelatedField(many=True, queryset=Attribute.objects.all())
-# 	image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
+# 	attributes = DetailedAttributeSerializer(many=True, required=False, read_only=True)
+# 	image = ImageSerializer(required=False)
 #
 # 	class Meta:
 # 		model = Product
 # 		fields = ProductSerializer.Meta.fields + ['attributes', 'image']
-
 
 # class DetailedCatalogSerializer(CatalogSerializer):
 # 	products = DetailedProductSerializer(

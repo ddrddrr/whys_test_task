@@ -1,20 +1,8 @@
-from .model_factories import attribute_factory as af, product_factory as pf, image_factory as imgf
 import os
 import json
 
 IMPORT_ENDPOINT = '/import/'
 TEST_DATA = os.path.join('..', 'TASK', 'test_data.json')
-
-FACTORIES = {
-	af.AttributeNameFactory,
-	af.AttributeValueFactory,
-	af.AttributeFactory,
-	imgf.ImageFactory,
-	pf.ProductFactory,
-	pf.ProductAttributesFactory,
-	pf.ProductImageFactory,
-	pf.CatalogFactory,
-}
 
 
 def get_model_id(payload):

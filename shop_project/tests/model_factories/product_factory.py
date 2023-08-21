@@ -1,10 +1,12 @@
+import random as r
+
 from factory import Factory, Faker, SubFactory, post_generation
-from factory.django import DjangoModelFactory
+
 from products.models import Product, ProductAttributes, ProductImage, Catalog
+
 from .image_factory import ImageFactory
 from .attribute_factory import AttributeFactory
 from .base_factory import UserIdFactory
-import random as r
 
 
 class CurrencyProvider(Factory):

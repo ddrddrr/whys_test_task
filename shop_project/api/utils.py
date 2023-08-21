@@ -1,6 +1,9 @@
-from django.apps import apps
-from typing import Dict
 import importlib
+
+from django.apps import apps
+
+from rest_framework.response import Response
+from rest_framework import status
 
 
 # Assuming model names are unique
@@ -13,17 +16,13 @@ class ModelToSerializersMapping:
 
 	def __init__(self):
 		self.model_serializer_mapping = dict()
-		# self.model_field_names_mapping = dict()
 		for config in apps.get_app_configs():
 			root_module_name = config.name
 			for model in config.get_models():
 				model_name = model.__name__
 				serializer_classes = self.get_serializer_classes(model_name, root_module_name)
-				# field_mapping = self.get_field_mapping(root_module_name)
 				if serializer_classes is not None:
 					self.model_serializer_mapping[model_name.lower()] = (model, serializer_classes)
-				# if field_mapping is not None:
-				# 	self.model_field_names_mapping[model_name.lower()] = field_mapping
 
 	@staticmethod
 	def get_serializer_classes(model_name, root_module_name):
@@ -36,29 +35,14 @@ class ModelToSerializersMapping:
 		except ImportError:
 			return None
 
-	# @staticmethod
-	# def get_field_mapping(root_module_name):
-	# 	try:
-	# 		field_mapping_module = importlib.import_module(f"{root_module_name}.field_mapping")
-	# 		return getattr(field_mapping_module, f"{root_module_name.upper()}_FIELDS_MAPPING", dict())
-	# 	except ImportError:
-	# 		return None
-
 	def get_model_and_serializers(self, model_name):
 		return self.model_serializer_mapping.get(model_name.lower(), (None, None))
 
-	# def get_field_map(self, model_name):
-	# 	return self.model_field_names_mapping.get(model_name.lower(), None)
+
+def custom_400(msg):
+	return Response({'status': 'error', 'error': msg}, status=status.HTTP_400_BAD_REQUEST)
 
 
-MODEL_TO_SERIALIZERS_MAP = ModelToSerializersMapping()
-
-# def change_attribute_names(attributes: Dict[str, str], field_mapping: Dict[str, str]):
-# 	new_attrs = dict()
-# 	for attribute in attributes:
-# 		new_name = field_mapping.get(attribute.lower(), '')
-# 		if new_name:
-# 			new_attrs[new_name] = attributes[attribute]
-# 		else:
-# 			new_attrs[attribute] = attributes[attribute]
-# 	return new_attrs
+def get_model_name(data):
+	name = list(data.keys())[0]
+	return name
