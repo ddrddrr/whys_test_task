@@ -17,7 +17,7 @@ Docker is needed for the installation
 3. In order to gain access to management commands run new container like this
 docker run -it <image_name> bash
 Or an existing container like this
-docker exec -it <name> bash
+docker start -d <name>; docker exec -it <name> bash
 ```
     
 ## Usage
