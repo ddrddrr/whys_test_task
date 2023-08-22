@@ -14,10 +14,6 @@ Docker is needed for the installation
     https://github.com/ddrddrr/whys_test_task.git
 2. Run this command in root project directory
     docker compose up
-3. In order to gain access to management commands run new container like this
-docker run -it <image_name> bash
-Or an existing container like this
-docker start -d <name>; docker exec -it <name> bash
 ```
     
 ## Usage

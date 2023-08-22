@@ -8,8 +8,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY shop_project .
-WORKDIR /app
+COPY shop_project shop_project
+WORKDIR shop_project
 
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+CMD python manage.py makemigrations; python manage.py migrate; python manage.py runserver 0.0.0.0:8000
+

@@ -1,5 +1,5 @@
 services:
-  web:
+  shop_project:
     build:
       context: .
       dockerfile: Dockerfile
